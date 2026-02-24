@@ -1,22 +1,18 @@
 pipeline {
-    agent {
-        docker {
-            // Используем готовый образ, где всё уже установлено
-            image 'dtzar/helm-kubectl:3.14'
-        }
-    }
+    agent any
     stages {
-        stage('Validate Tools') {
+        stage('Check Kubernetes') {
             steps {
-                // Здесь команды точно сработают, так как они вшиты в образ
-                sh 'kubectl version --client'
-                sh 'helm version'
+                script {
+                    // Мы пробуем выполнить команду через sudo, 
+                    // так как у пользователя jenkins обычно нет прав на кубер
+                    sh 'sudo kubectl get nodes'
+                }
             }
         }
-        stage('Check Cluster') {
+        stage('Check Helm') {
             steps {
-                // Эта команда проверит связь с твоим кластером
-                sh 'kubectl get nodes'
+                sh 'sudo helm list -A'
             }
         }
     }
