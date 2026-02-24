@@ -1,15 +1,19 @@
 pipeline {
     agent any
     stages {
-        stage('Kubernetes Check') {
+        stage('Install Kubectl') {
             steps {
-                // Теперь эта команда сработает, так как мы скопировали kubectl и конфиг
-                sh 'kubectl get nodes'
+                sh '''
+                # Скачиваем kubectl внутрь временной папки сборки
+                curl -LO "https://dl.k8s.io/release/v1.27.3/bin/linux/amd64/kubectl"
+                chmod +x ./kubectl
+                '''
             }
         }
-        stage('Cluster Info') {
+        stage('Check Cluster') {
             steps {
-                sh 'kubectl cluster-info'
+                // Запускаем kubectl, указывая на файл конфигурации, который мы подложили
+                sh './kubectl get nodes'
             }
         }
     }
