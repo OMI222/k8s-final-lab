@@ -3,12 +3,14 @@ pipeline {
     stages {
         stage('Check Connection') {
             steps {
-                sh 'kubectl get nodes'
+                // Пробуем вызвать kubectl по полному пути
+                sh '/usr/local/bin/kubectl get nodes || kubectl get nodes'
             }
         }
         stage('Check Helm') {
             steps {
-                sh 'helm list -A'
+                // Пробуем вызвать helm по полному пути
+                sh '/usr/local/bin/helm list -A || helm list -A'
             }
         }
     }
