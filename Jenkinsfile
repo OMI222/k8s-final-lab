@@ -1,18 +1,15 @@
 pipeline {
     agent any
     stages {
-        stage('Check Kubernetes') {
+        stage('Kubernetes Check') {
             steps {
-                script {
-                    // Мы пробуем выполнить команду через sudo, 
-                    // так как у пользователя jenkins обычно нет прав на кубер
-                    sh 'sudo kubectl get nodes'
-                }
+                // Теперь эта команда сработает, так как мы скопировали kubectl и конфиг
+                sh 'kubectl get nodes'
             }
         }
-        stage('Check Helm') {
+        stage('Cluster Info') {
             steps {
-                sh 'sudo helm list -A'
+                sh 'kubectl cluster-info'
             }
         }
     }
